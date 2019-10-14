@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+	<link rel="stylesheet" href="./css/music player.css">
+	<script src="./jquery-1.10.2.min.js"></script>
+
+	<title>music player</title>
+</head>
+
+<body>
+
+	<div id="bg">
+		<div id="blackLayer"></div>
+		<img src="./img/100.jpg">
+	</div>
+
+	<div id="main">
+		<div id="image">
+			<img src="./img/100.jpg">
+		</div>
+		<div id="player">
+			<div id="songTitle">DEMO</div>
+			<div id="buttons">
+				<button id="pre" onclick="prev()">
+					<li class="fas fa-backward">
+				</button>
+				<button id="play" onclick="playorpausesong()">
+					<li class="fas fa-play">
+				</button>
+				<button id="next" onclick="next()">
+					<li class="fas fa-forward">
+				</button>
+
+			</div>
+			<div id="seek-bar">
+				<div id="fill"></div>
+				<div id="handle"></div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+
+	var songs = ['music/100 Rishteri.mp3', 'music/Nemiram.mp3', 'music/Khabe Khoob.mp3','music/Darya.mp3'];
+	var poster = ['img/100.jpg', 'img/nmiram.jpg', 'img/khab khoob.jpg', 'img/darya.jpg'];
+	var songTitle = document.getElementById("songTitle");
+	var fillBar = document.getElementById("fill");
+	var song = new Audio();
+	var currentsong = 0;
+
+	//window.onload=playsong;
+	playsong('music/100 Rishteri.mp3', 'img/100.jpg');
+	$("#bg img").attr("src", 'img/100.jpg');
+
+
+	function playsong(music, img) {
+	$("#bg img").attr("src", img);
+		song.src = [music];
+		songTitle.textContent = songs[currentsong].replace('music/', '');;
+		var playPromise = song.play();
+		 if (playPromise !== undefined) {
+			 playPromise.then(_ => {
+				// Automatic playback started!
+				// Show playing UI.
+			 })
+			 .catch(error => {
+				 $("#play li").attr("class", "fas fa-pause");
+				// Auto-play was prevented
+				// Show paused UI.
+			 });
+		  }
+		$("#image img").attr("src", img);
+	}
+
+	function playorpausesong() {
+		if (song.paused) {
+			song.play();
+			$("#play li").attr("class", "fas fa-play");
+
+		} else {
+			song.pause();
+			$("#play li").attr("class", "fas fa-pause");
+		}
+	}
+
+	song.addEventListener('timeupdate', function() {
+		var position = song.currentTime / song.duration;
+		fillBar.style.width = position * 100 + '%';
+
+	});
+
+	function next() {
+
+		if (currentsong < songs.length - 1) {
+			currentsong++;
+			//currentsong=0;
+			playsong(songs[currentsong], poster[currentsong]);
+			$("#play li").attr("class", "fas fa-play");
+			[currentsong];
+		}
+	}
+
+	function prev() {
+
+		if (currentsong > 0) {
+			currentsong--;
+			playsong(songs[currentsong], poster[currentsong]);
+			$("#play li").attr("class", "fas fa-play");
+			[currentsong];
+		}
+	}
+</script>
+
+</html>
